@@ -13,7 +13,6 @@ public class DebugScreen extends ContainerScreen<DebugContainer> {
 
     public DebugScreen(DebugContainer container, PlayerInventory inv, ITextComponent name) {
         super(container, inv, name);
-        this.width =
     }
 
     @Override
