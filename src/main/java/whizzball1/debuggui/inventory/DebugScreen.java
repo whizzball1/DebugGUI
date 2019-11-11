@@ -1,11 +1,16 @@
 package whizzball1.debuggui.inventory;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import whizzball1.debuggui.DebugGUI;
+import whizzball1.debuggui.network.DebugGUIPacketHandler;
+import whizzball1.debuggui.network.VisibilityMessage;
 
 public class DebugScreen extends ContainerScreen<DebugContainer> {
 
@@ -13,6 +18,20 @@ public class DebugScreen extends ContainerScreen<DebugContainer> {
 
     public DebugScreen(DebugContainer container, PlayerInventory inv, ITextComponent name) {
         super(container, inv, name);
+        this.xSize = 175;
+        this.ySize = 221;
+
+    }
+
+    @Override
+    public void init(Minecraft p_init_1_, int p_init_2_, int p_init_3_) {
+        super.init(p_init_1_, p_init_2_, p_init_3_);
+        addButton(new Button(guiLeft + 112, guiTop + 35, 12, 18, "<", (i) -> {
+            DebugGUIPacketHandler.INSTANCE.sendToServer(new VisibilityMessage(-1, container.tileEntity.getPos()));
+        }));
+        addButton(new Button(guiLeft + 144, guiTop + 35, 12, 18, ">", (i) -> {
+            DebugGUIPacketHandler.INSTANCE.sendToServer(new VisibilityMessage(1, container.tileEntity.getPos()));
+        }));
     }
 
     @Override

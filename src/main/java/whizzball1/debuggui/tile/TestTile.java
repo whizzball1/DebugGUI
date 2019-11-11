@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import whizzball1.debuggui.DebugGUI;
 import whizzball1.debuggui.blocks.ModBlocks;
 import whizzball1.debuggui.inventory.DebugContainer;
 
@@ -23,7 +24,8 @@ import javax.annotation.Nullable;
 
 public class TestTile extends TileEntity implements IDebugTile, INamedContainerProvider {
 
-    private LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
+    private IItemHandler handler = createHandler();
+    private LazyOptional<IItemHandler> optional = LazyOptional.of(() -> handler);
     public int visibleSlot = 0;
 
     public TestTile() {
@@ -34,8 +36,12 @@ public class TestTile extends TileEntity implements IDebugTile, INamedContainerP
         return visibleSlot;
     }
 
+    public void setVisibleSlot(int slot) {
+        if (slot < handler.getSlots() & slot >= 0) this.visibleSlot = slot;
+    }
+
     private IItemHandler createHandler() {
-        return new ItemStackHandler(1);
+        return new ItemStackHandler(4);
     }
 
     @Override
@@ -52,16 +58,23 @@ public class TestTile extends TileEntity implements IDebugTile, INamedContainerP
     @Override
     public void read(CompoundNBT tag) {
         CompoundNBT invTag = tag.getCompound("inv");
-        handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>)h).deserializeNBT(invTag));
+        ((INBTSerializable<CompoundNBT>)handler).deserializeNBT(invTag);
+        //check if this visibleSlot is allowed
+        visibleSlot = tag.getInt("visible_slot");
+        if (!(indexInHandler(visibleSlot))) visibleSlot = 0;
+        DebugGUI.LOGGER.info(visibleSlot);
         super.read(tag);
+    }
+
+    public boolean indexInHandler(int index) {
+        return index < handler.getSlots();
     }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
-        handler.ifPresent(h -> {
-            CompoundNBT compound = ((INBTSerializable<CompoundNBT>)h).serializeNBT();
-            tag.put("inv", compound);
-        });
+        CompoundNBT compound = ((INBTSerializable<CompoundNBT>)handler).serializeNBT();
+        tag.put("inv", compound);
+        tag.putInt("visible_slot", visibleSlot);
         return super.write(tag);
     }
 
@@ -70,7 +83,7 @@ public class TestTile extends TileEntity implements IDebugTile, INamedContainerP
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return handler.cast();
+            return optional.cast();
         }
         return super.getCapability(cap, side);
     }

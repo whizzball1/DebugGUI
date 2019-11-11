@@ -33,7 +33,7 @@ public class DebugGUI {
 
     public static ModSetup setup = new ModSetup();
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public DebugGUI() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -41,6 +41,7 @@ public class DebugGUI {
 
     private void setup(final FMLCommonSetupEvent e) {
         proxy.init();
+        setup.init();
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
