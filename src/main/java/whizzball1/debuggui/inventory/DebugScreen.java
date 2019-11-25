@@ -1,5 +1,6 @@
 package whizzball1.debuggui.inventory;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -12,26 +13,22 @@ import whizzball1.debuggui.DebugGUI;
 import whizzball1.debuggui.network.DebugGUIPacketHandler;
 import whizzball1.debuggui.network.VisibilityMessage;
 
-public class DebugScreen extends ContainerScreen<DebugContainer> {
+import java.util.*;
 
-    private ResourceLocation GUI = new ResourceLocation(DebugGUI.MODID, "textures/gui/debug_gui.png");
+public class DebugScreen extends AbstractDebugScreen {
+
+
+    //Button impl specific
+    public int statistic = 0;
 
     public DebugScreen(DebugContainer container, PlayerInventory inv, ITextComponent name) {
         super(container, inv, name);
-        this.xSize = 175;
-        this.ySize = 221;
 
     }
 
     @Override
     public void init(Minecraft p_init_1_, int p_init_2_, int p_init_3_) {
         super.init(p_init_1_, p_init_2_, p_init_3_);
-        addButton(new Button(guiLeft + 112, guiTop + 35, 12, 18, "<", (i) -> {
-            DebugGUIPacketHandler.INSTANCE.sendToServer(new VisibilityMessage(-1, container.tileEntity.getPos()));
-        }));
-        addButton(new Button(guiLeft + 144, guiTop + 35, 12, 18, ">", (i) -> {
-            DebugGUIPacketHandler.INSTANCE.sendToServer(new VisibilityMessage(1, container.tileEntity.getPos()));
-        }));
     }
 
     @Override
@@ -42,15 +39,28 @@ public class DebugScreen extends ContainerScreen<DebugContainer> {
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+    public void addTextInit() {
+        addStringWithId("longString", new StringHolder(Lists.newArrayList("This is part of the string ", "and this is part of the string ", "and if you want to see more you'd better change.")));
+        addStringWithId("shortString", new StringHolder(Lists.newArrayList("This is a shorter string")));
+        addStringWithId("statisticString", new StringHolder(Lists.newArrayList("This is a string with a statistic: ", "0")));
+        addStringWithId("excessiveString", new StringHolder(Lists.newArrayList("This is an excessively long string which has been made to test my theoretically great pagification algorithm that should hopefully handle edits. An example of such edits is as follows: ", "Dummy string.")));
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GUI);
-        int relX = (this.width - this.xSize) / 2;
-        int relY = (this.height - this.ySize) / 2;
-        this.blit(relX, relY, 0, 0, this.xSize, this.ySize);
+    public void addButtonInit() {
+        buttonList.add(new Button(guiLeft + 134 - 48/2, guiTop + 70, 48, 18, "Button 1", (i) -> {
+            statistic += -1;
+            getStringById("statisticString").setString(1, Integer.toString(statistic));
+        }));
+        buttonList.add(new Button(guiLeft + 134 - 48/2, guiTop + 70, 48, 18, "Button 2", (i) -> {
+            statistic += 1;
+            getStringById("statisticString").setString(1, Integer.toString(statistic));
+        }));
+        buttonList.add(new Button(guiLeft + 134 - 48/2, guiTop + 70, 48, 18, "Button 3", (i) -> {
+            getStringById("excessiveString").setString(1, getStringById("excessiveString").getString(1) + " Dummy string.");
+        }));
+        buttonMap.put(buttonList.get(0), "Lower Statistic by 1");
+        buttonMap.put(buttonList.get(1), "Increase Statistic by 1");
+        buttonMap.put(buttonList.get(2), "Increase excessive string");
     }
 }

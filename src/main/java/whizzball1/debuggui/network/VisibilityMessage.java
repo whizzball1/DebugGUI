@@ -4,6 +4,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
+import whizzball1.debuggui.inventory.AbstractDebugContainer;
 import whizzball1.debuggui.inventory.DebugContainer;
 import whizzball1.debuggui.tile.IDebugTile;
 
@@ -33,7 +34,8 @@ public class VisibilityMessage {
             TileEntity te = ctx.get().getSender().getServerWorld().getTileEntity(msg.pos);
             IDebugTile ite = (IDebugTile) te;
             ite.setVisibleSlot(ite.getVisibleSlot() + msg.change);
-            ((DebugContainer) ctx.get().getSender().openContainer).updateSlot();
+            ((AbstractDebugContainer) ctx.get().getSender().openContainer).updateSlot();
+            
         });
     }
 }

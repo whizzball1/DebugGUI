@@ -23,5 +23,13 @@ public class DebugGUIPacketHandler {
                 VisibilityMessage::decode,
                 VisibilityMessage::handle
         );
+
+        INSTANCE.registerMessage(
+                id++,
+                SlotMessage.class,
+                SlotMessage::encode,
+                SlotMessage::decode,
+                SlotMessage::handle
+        );
     }
 }
