@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractDebugScreen extends ContainerScreen<DebugContainer> {
+public abstract class AbstractDebugContainerScreen<T extends AbstractDebugContainer> extends ContainerScreen<T> {
     private ResourceLocation GUI = new ResourceLocation(DebugGUI.MODID, "textures/gui/debug_gui.png");
 
     private final int textPageWidth = 75;
@@ -33,9 +33,7 @@ public abstract class AbstractDebugScreen extends ContainerScreen<DebugContainer
     public List<Integer> pagePartitions = new ArrayList<>();
     public int currentStringPage = 0;
 
-    public int slotNumber = -1;
-
-    public AbstractDebugScreen(DebugContainer container, PlayerInventory inv, ITextComponent name) {
+    public AbstractDebugContainerScreen(T container, PlayerInventory inv, ITextComponent name) {
         super(container, inv, name);
         this.xSize = 175;
         this.ySize = 221;
@@ -61,7 +59,7 @@ public abstract class AbstractDebugScreen extends ContainerScreen<DebugContainer
             if (!(currentStringPage == 0)) switchTextPage(currentStringPage - 1);
         }));
         addButton(new Button(guiLeft + 75, guiTop + 104, 12, 18, ">", (i) -> {
-            if (!(currentStringPage + 1 == pagePartitions.size())) switchTextPage(currentStringPage + 1);
+            if (!(currentStringPage + 1 >= pagePartitions.size())) switchTextPage(currentStringPage + 1);
         }));
         addButtonInit();
         switchButton(0, true);
@@ -89,14 +87,14 @@ public abstract class AbstractDebugScreen extends ContainerScreen<DebugContainer
     public void addTextInit() {
     }
 
-    //Override this to change the initial buttons added!
-    public void addButtonInit() {
-
-    }
-
     public void addTextDynamic(StringHolder str, String id) {
         addStringWithId(id, str);
         pagify(true);
+    }
+
+    //Override this to change the initial buttons added!
+    public void addButtonInit() {
+
     }
 
     public void addStringWithId(String id, StringHolder str) {

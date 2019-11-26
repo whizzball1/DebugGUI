@@ -1,17 +1,26 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+repositories {
+    maven { url = 'https://dl.bintray.com/whizzball1/debuglibraries'}
+}
+
+
 
 version = 'beta-0.1'
 group = 'whizzball1.debuggui' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -109,6 +118,9 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    compile 'whizzball1.debuggui:DebugGUI:beta-0.1'
+    //implementation fg.deobf('whizzball1.debuggui:DebugGUI:beta-0.1')
+
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -126,6 +138,23 @@ jar {
     }
 }
 
+bintray {
+    user = 'whizzball1'
+    key = '58121f4e5e57981f0cbe3529105eb7c763ad41e5'
+    publications = ['mavenJava']
+    pkg {
+        repo = 'debuglibraries'
+        name = 'debuggui'
+        licenses = ['GPL-3.0']
+        vcsUrl = 'https://github.com/whizzball1/DebugGUI.git'
+        version {
+            name = '1.14-0.1-beta'
+        }
+    }
+}
+
+
+
 // Example configuration to allow publishing using the maven-publish task
 // we define a custom artifact that is sourced from the reobfJar output task
 // and then declare that to be published
@@ -141,9 +170,9 @@ publishing {
             artifact reobfArtifact
         }
     }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
-    }
+//    repositories {
+//        maven {
+//            url "file:///${project.projectDir}/mcmodsrepo"
+//        }
+//    }
 }

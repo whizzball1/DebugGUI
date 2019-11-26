@@ -49,6 +49,36 @@ public class StringHolder {
         isDirty = true;
     }
 
+    public void addString(String string, int index) {
+        if (validateIndex(index)) {
+            stringArray.add(index, string);
+            isDirty = true;
+        }
+    }
+
+    public void addString(String string) {
+        stringArray.add(string);
+        isDirty = true;
+    }
+
+    public void addStrings(int index, List<String> stringArray) {
+        if (validateIndex(index)) {
+            this.stringArray.addAll(index, stringArray);
+            isDirty = true;
+        }
+    }
+
+    public void addStrings(List<String> stringArray) {
+        this.stringArray.addAll(stringArray);
+        isDirty = true;
+    }
+
+    public void removeString(int index) {
+        if (validateIndex(index)) {
+            this.stringArray.remove(index);
+        }
+    }
+
     public String getString(int index) {
         return validateIndex(index) ? stringArray.get(index) : null;
     }

@@ -1,7 +1,6 @@
 package whizzball1.debuggui.inventory;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -12,8 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import whizzball1.debuggui.DebugGUI;
-import whizzball1.debuggui.blocks.ModBlocks;
 import whizzball1.debuggui.tile.IDebugTile;
 
 import java.util.HashMap;
@@ -71,7 +68,6 @@ public abstract class AbstractDebugContainer extends Container {
         if(!hasItemHandler) return;
         visibleSlot.set(debugTile.getVisibleSlot());
         addDebugSlot(debugSlots.get(debugTile.getVisibleSlot()));
-        DebugGUI.LOGGER.info("changedSLot");
     }
 
     protected void addDebugSlot(Slot slotIn) {

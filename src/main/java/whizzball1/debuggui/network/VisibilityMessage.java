@@ -5,7 +5,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 import whizzball1.debuggui.inventory.AbstractDebugContainer;
-import whizzball1.debuggui.inventory.DebugContainer;
 import whizzball1.debuggui.tile.IDebugTile;
 
 import java.util.function.Supplier;
